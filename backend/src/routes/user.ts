@@ -27,19 +27,34 @@ const initialiseClient:MiddlewareHandler = async (c, next)=>{
   userRouter.post('/signup', initialiseClient, async (c) => {
     const prisma = c.get("prisma");
     const body = await c.req.json();
+
     const success = signupInput.safeParse(body);
-    if(!success){
+    if(!success.success){
       c.status(411);
       return c.json({
         message : "Invalid Inputs"
       })
     }
+
+    const existingUser = await prisma.user.findUnique({
+      where : {
+        email : body.email
+      }
+    });
+    if(existingUser){
+      c.status(409);
+      return c.json({
+        message : "User already exists with this email"
+      });
+    }
+
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(body.password,saltRounds);
     const user = await prisma.user.create({
       data : {
         email : body.email,
-        password : hashedPassword
+        password : hashedPassword,
+        name : body.name
       }
     })
     const token = await sign({
@@ -56,30 +71,35 @@ const initialiseClient:MiddlewareHandler = async (c, next)=>{
   
     const body = await c.req.json();
     const success = signinInput.safeParse(body);
-    if(!success){
+    if(!success.success){
       c.status(411);
       return c.json({
         message : "Invalid Inputs"
       })
     }
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(body.password,saltRounds);
-    const res = await prisma.user.findUnique({
+
+    const user = await prisma.user.findUnique({
       where : {
-        email : body.email,
-        password : hashedPassword,
-        name : body.name
+        email : body.email
       }
     });
+    if(!user){
+      c.status(403);
+      return c.json({
+        message : "Invalid credentials"
+      });
+    }
+
+    const validPassword = await bcrypt.compare(body.password,user.password);
   
-    if(!res){
+    if(!validPassword){
       c.status(403);
       return c.json({
         error : "Invalid Credentials"
       });
     }
   
-    const token = await sign({id:res.id},c.env.JWT_SECRET);
+    const token = await sign({id:user.id},c.env.JWT_SECRET);
     return c.json({
       token : token
     });
