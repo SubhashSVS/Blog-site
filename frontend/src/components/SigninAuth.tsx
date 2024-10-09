@@ -16,8 +16,8 @@ export const SigninAuth = ()=>{
     async function sendRequest(){
         try{
             const response = await axios.post(`${DATABASE_URL}/api/v1/user/signin`,userInputs);
-            const token = response.data;
-            localStorage.setItem('token',token);
+            const token = response.data.token;
+            localStorage.setItem('token','Bearer '+token);
             navigate('/blogs');
         }catch(e){
             console.log(e);

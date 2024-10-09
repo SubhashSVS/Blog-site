@@ -18,14 +18,14 @@ export const SignupAuth = ()=>{
     async function sendRequest() {
         try{
             const response = await axios.post(`${DATABASE_URL}/api/v1/user/signup`,userInputs);
-            const jwt = response.data;
-            localStorage.setItem('token',jwt);
+            const token = response.data;
+            localStorage.setItem('token','Bearer '+token);
             navigate('/blogs');
-
         }catch(e){
             console.log("request error");
         }
-    }
+    } 
+    
 
     return (
         <div className="h-screen flex justify-center items-center flex-col">
