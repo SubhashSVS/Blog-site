@@ -1,5 +1,5 @@
 import axios from "axios"
-import { DATABASE_URL } from "../../config"
+import { BACKEND_URL } from "../../config"
 import { useState } from "react"
 
 export const AddBlog = ()=>{
@@ -9,7 +9,7 @@ export const AddBlog = ()=>{
         <div className="h-full grid grid-cols-6 pt-14 px-8">
             <div className="col-span-1 items-end">
                 <button onClick={()=>{
-                    axios.post(`${DATABASE_URL}/api/v1/blog`,{
+                    axios.post(`${BACKEND_URL}/api/v1/blog`,{
                         title,
                         content
                     },{
