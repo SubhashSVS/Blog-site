@@ -1,0 +1,1 @@
+export const BACKEND_URL="https://backend.svs-subhash2003.workers.dev"

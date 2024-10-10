@@ -3,7 +3,7 @@ import { HeaderAuth } from "./HeaderAuth"
 import { LabelledInput } from "./LabelledInput"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
-import { DATABASE_URL } from "../../config"
+import { BACKEND_URL } from "../../config"
 import { SigninInput } from "@subhash_svs/blog-common"
 
 export const SigninAuth = ()=>{
@@ -15,9 +15,11 @@ export const SigninAuth = ()=>{
     const navigate = useNavigate();
     async function sendRequest(){
         try{
-            const response = await axios.post(`${DATABASE_URL}/api/v1/user/signin`,userInputs);
+            const response = await axios.post(`${BACKEND_URL}/api/v1/user/signin`,userInputs);
             const token = response.data.token;
             localStorage.setItem('token','Bearer '+token);
+            const name = response.data.name;
+            localStorage.setItem('name',name);
             navigate('/blogs');
         }catch(e){
             console.log(e);

@@ -1,5 +1,6 @@
 import { AppBar } from "../components/AppBar"
 import { BlogCard } from "../components/BlogCard"
+import { Spinner } from "../components/Spinner";
 import { useBlogs } from "../hooks"
 
 export const Blogs = ()=>{
@@ -7,7 +8,7 @@ export const Blogs = ()=>{
 
     if(loading){
         return <div>
-            loading ...
+            <Spinner />
         </div>
     }
 

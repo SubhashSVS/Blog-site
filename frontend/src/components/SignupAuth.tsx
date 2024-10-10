@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { SignupInput } from "@subhash_svs/blog-common" 
-import { DATABASE_URL } from "../../config"
+import { BACKEND_URL } from "../../config"
 import axios from "axios"
 import { LabelledInput } from "./LabelledInput"
 import { HeaderAuth } from "./HeaderAuth"
@@ -17,9 +17,11 @@ export const SignupAuth = ()=>{
 
     async function sendRequest() {
         try{
-            const response = await axios.post(`${DATABASE_URL}/api/v1/user/signup`,userInputs);
-            const token = response.data;
+            const response = await axios.post(`${BACKEND_URL}/api/v1/user/signup`,userInputs);
+            const token = response.data.token;
             localStorage.setItem('token','Bearer '+token);
+            const name = response.data.name;
+            localStorage.setItem('name',name);
             navigate('/blogs');
         }catch(e){
             console.log("request error");
