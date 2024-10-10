@@ -62,7 +62,8 @@ const initialiseClient:MiddlewareHandler = async (c, next)=>{
     },c.env.JWT_SECRET);
   
     return c.json({
-      token : token
+      token : token,
+      name : body.name
     });
   })
   
@@ -101,7 +102,8 @@ const initialiseClient:MiddlewareHandler = async (c, next)=>{
   
     const token = await sign({id:user.id},c.env.JWT_SECRET);
     return c.json({
-      token : token
+      token : token,
+      name : user.name
     });
   })
   
